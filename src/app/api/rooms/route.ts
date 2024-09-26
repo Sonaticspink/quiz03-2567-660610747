@@ -1,29 +1,35 @@
 import { DB, readDB, writeDB } from "@lib/DB";
 import { checkToken } from "@lib/checkToken";
+import { console } from "inspector";
 import { nanoid } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
   readDB();
+  let total:number = 0
+  for(let rooms in (<any>DB).rooms){
+    total += 1
+  }
   return NextResponse.json({
+
     ok: true,
-    //rooms:
-    //totalRooms:
+    rooms: (<any>DB).rooms,
+    totalRooms: total
   });
 };
 
 export const POST = async (request: NextRequest) => {
   const payload = checkToken();
 
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Invalid token",
-  //   },
-  //   { status: 401 }
-  // );
+  return NextResponse.json(
+    {
+      ok: false,
+      message: "Invalid token",
+    },
+    { status: 401 }
+  );
 
-  readDB();
+  // readDB();
 
   // return NextResponse.json(
   //   {
