@@ -7,7 +7,7 @@ export const GET = async (request: NextRequest) => {
   readDB();
   const data = (<Database>DB)
   const roomm = request.nextUrl.searchParams.get("roomId");
-  const foundroom = data.rooms.findIndex((r) => r.roomId === roomm);
+  
   const foundroomd = data.messages.filter((r) => r.roomId === roomm);
   if(!foundroomd){
   return NextResponse.json(
@@ -28,13 +28,19 @@ export const GET = async (request: NextRequest) => {
 export const POST = async (request: NextRequest) => {
   readDB();
   
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: `Room is not found`,
-  //   },
-  //   { status: 404 }
-  // );
+  const data = (<Database>DB)
+  const roomm = request.nextUrl.searchParams.get("roomId");
+  
+  const foundroomd = data.messages.filter((r) => r.roomId === roomm);
+  if(!foundroomd){
+  return NextResponse.json(
+    {
+      ok: false,
+      message: `Room is not found`,
+    },
+    { status: 404 }
+  );
+  }
 
   const messageId = nanoid();
 
@@ -42,32 +48,36 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.json({
     ok: true,
-    // messageId,
+    messageId: messageId,
     message: "Message has been sent",
   });
 };
 
 export const DELETE = async (request: NextRequest) => {
   const payload = checkToken();
-
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Invalid token",
-  //   },
-  //   { status: 401 }
-  // );
+  const body = await request.json();
+  if(!payload)
+  return NextResponse.json(
+    {
+      ok: false,
+      message: "Invalid token",
+    },
+    { status: 401 }
+  );
 
   readDB();
-
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Message is not found",
-  //   },
-  //   { status: 404 }
-  // );
-
+  const data = (<Database>DB)
+  let filtered = data.messages
+  filtered = filtered.filter((mes) => mes === body.messageId)
+  if(!filtered){
+  return NextResponse.json(
+    {
+      ok: false,
+      message: "Message is not found",
+    },
+    { status: 404 }
+  );
+}
   writeDB();
 
   return NextResponse.json({
