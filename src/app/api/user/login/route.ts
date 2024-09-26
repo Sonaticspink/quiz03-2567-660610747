@@ -15,8 +15,6 @@ export const POST = async (request: NextRequest) => {
   // );
 
   const token = "Replace this with token creation";
-  for(const member in Data.users){
-    if()
-  }
+  
   return NextResponse.json({ ok: true, token });
 };
