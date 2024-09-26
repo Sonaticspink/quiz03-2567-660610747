@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 
-import { DB, readDB } from "@lib/DB";
+import { Database, DB, readDB } from "@lib/DB";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   readDB();
-
+  const Data = (<Database>DB)
   // return NextResponse.json(
   //   {
   //     ok: false,
@@ -15,6 +15,8 @@ export const POST = async (request: NextRequest) => {
   // );
 
   const token = "Replace this with token creation";
-
+  for(const member in Data.users){
+    if()
+  }
   return NextResponse.json({ ok: true, token });
 };
